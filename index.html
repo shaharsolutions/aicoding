@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="סדנה טכנולוגית - מבוא לפיתוח כלים דיגיטליים עם AI. בנו כלי אמיתי תוך שעה.">
+    <title>מבוא לפיתוח כלים דיגיטליים עם AI | סדנה מעשית</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-light: #f8fafc;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --white: #ffffff;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Assistant', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+            padding: 100px 20px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 16px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Section Styling */
+        section {
+            padding: 80px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        /* Features List */
+        .features-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-item {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            border-right: 4px solid var(--primary-color);
+            box-shadow: var(--shadow);
+        }
+
+        /* Details Grid */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            text-align: center;
+        }
+
+        .detail-card {
+            padding: 20px;
+            background: #eff6ff;
+            border-radius: 12px;
+        }
+
+        .detail-card strong {
+            display: block;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+
+        /* Form */
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        input:focus, textarea:focus {
+            outline: 2px solid var(--primary-color);
+            border-color: transparent;
+        }
+
+        #form-status {
+            margin-top: 20px;
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            display: none;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            section { padding: 50px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="hero">
+        <h1>מבוא לפיתוח כלים דיגיטליים עם AI</h1>
+        <p>בנו כלי דיגיטלי אמיתי תוך שעה – גם בלי ניסיון בתכנות.</p>
+        <a href="#register" class="btn">הרשמה לסדנה</a>
+    </header>
+
+    <section>
+        <h2 class="section-title">מה נבנה בסדנה</h2>
+        <div class="card">
+            <p>בסדנה נבנה יחד <strong>מחולל קישורי WhatsApp</strong> שמאפשר ליצור קישור לשיחה עם הודעה מוכנה מראש.</p>
+            <p style="margin-top: 15px;">הכלי שימושי לאנשי מכירות, שירות לקוחות ובעלי עסקים שרוצים לייעל את התקשורת עם הלקוחות שלהם.</p>
+        </div>
+    </section>
+
+    <section style="background-color: #f1f5f9;">
+        <div style="max-width: 1000px; margin: 0 auto;">
+            <h2 class="section-title">מה תלמדו</h2>
+            <div class="features-list">
+                <div class="feature-item">איך להשתמש ב-AI כדי לכתוב קוד</div>
+                <div class="feature-item">איך לעבוד עם Google Apps Script</div>
+                <div class="feature-item">איך להפוך Google Sheets לבסיס נתונים</div>
+                <div class="feature-item">איך ליצור כלי אינטרנטי פשוט</div>
+                <div class="feature-item">איך לבנות ממשק משתמש בסיסי</div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2 class="section-title">פרטי הסדנה</h2>
+        <div class="details-grid">
+            <div class="detail-card">
+                <strong>מתי?</strong>
+                יום שלישי, 19:00
+            </div>
+            <div class="detail-card">
+                <strong>משך זמן</strong>
+                60 דקות
+            </div>
+            <div class="detail-card">
+                <strong>איפה?</strong>
+                אונליין (לינק יישלח לנרשמים)
+            </div>
+        </div>
+    </section>
+
+    <section id="register">
+        <h2 class="section-title">הרשמה לסדנה</h2>
+        <div class="card form-container">
+            <form id="workshop-form">
+                <div class="form-group">
+                    <label for="name">שם מלא</label>
+                    <input type="text" id="name" name="name" required placeholder="ישראל ישראלי">
+                </div>
+                <div class="form-group">
+                    <label for="phone">טלפון</label>
+                    <input type="tel" id="phone" name="phone" required placeholder="050-0000000">
+                </div>
+                <div class="form-group">
+                    <label for="email">מייל</label>
+                    <input type="email" id="email" name="email" required placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="message">הודעה (אופציונלי)</label>
+                    <textarea id="message" name="message" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">הרשמה לסדנה</button>
+            </form>
+            <div id="form-status"></div>
+        </div>
+    </section>
+
+    <script>
+        // החלף את ה-URL הזה ב-Web App URL שתקבל מ-Google Apps Script
+        const SCRIPT_URL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
+
+        document.getElementById('workshop-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const statusDiv = document.getElementById('form-status');
+            const submitBtn = form.querySelector('button');
+            
+            // שינוי מצב כפתור
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'שולח...';
+            
+            const formData = new FormData(form);
+            const data = {
+                name: formData.get('name'),
+                phone: formData.get('phone'),
+                email: formData.get('email'),
+                message: formData.get('message'),
+                date: new Date().toLocaleString('he-IL')
+            };
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // חשוב לעבודה מול Apps Script בגרסה פשוטה
+                cache: 'no-cache',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                statusDiv.style.display = 'block';
+                statusDiv.style.backgroundColor = '#dcfce7';
+                statusDiv.style.color = '#166534';
+                statusDiv.innerText = 'נרשמת בהצלחה! נתראה בסדנה.';
+                form.reset();
+            })
+            .catch(error => {
+                statusDiv.style.display = 'block';
+                statusDiv.style.backgroundColor = '#fee2e2';
+                statusDiv.style.color = '#991b1b';
+                statusDiv.innerText = 'אופס! הייתה שגיאה בשליחה. נסה שוב.';
+                console.error('Error!', error.message);
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'הרשמה לסדנה';
+            });
+        });
+
+        // גלילה חלקה
+        document.querySelector('.btn').addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href.startsWith('#')) {
+                e.preventDefault();
+                document.querySelector(href).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        });
+    </script>
+</body>
+</html>
