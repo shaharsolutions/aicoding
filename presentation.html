@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מצגת סדנה: פיתוח כלים דיגיטליים עם AI</title>
+    
+    <!-- Premium Hebrew Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&family=Rubik:wght@500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-deep: #020617;
+            --bg-deck: #0f172a;
+            --accent-cyan: #22d3ee;
+            --accent-indigo: #6366f1;
+            --text-main: #cbd5e1;
+            --text-bright: #f8fafc;
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Heebo', sans-serif;
+            overflow: hidden;
+        }
+
+        .presentation-deck {
+            position: relative;
+            width: 1280px;
+            height: 720px;
+            background-color: var(--bg-deck);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.1), transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(34, 211, 238, 0.1), transparent 50%);
+            border-radius: 20px;
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transform-origin: center center;
+            border: 1px solid var(--glass-border);
+        }
+
+        /* Nav Controls - Modern Glassmorphism */
+        .nav-controls {
+            position: absolute;
+            bottom: 30px;
+            left: 40px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 10px 20px;
+            border-radius: 100px;
+            border: 1px solid var(--glass-border);
+            direction: ltr; /* Force physical order: counter, prev, next */
+        }
+
+        .slide-counter {
+            color: #94a3b8;
+            font-family: 'Rubik', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            margin-right: 12px;
+            letter-spacing: 1px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            color: var(--text-bright);
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-btn:hover {
+            background: rgba(34, 211, 238, 0.2);
+            color: var(--accent-cyan);
+            transform: scale(1.1);
+        }
+
+        /* Slide Management */
+        .slide-container {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            padding: 80px 120px;
+            position: relative;
+            z-index: 1;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .slide-container.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Typography */
+        h1, h2, h3 { font-family: 'Rubik', sans-serif; margin: 0; }
+        
+        .slide-title {
+            font-size: 54px;
+            font-weight: 800;
+            margin-bottom: 40px;
+            color: var(--text-bright);
+            position: relative;
+            padding-right: 25px;
+            border-right: 6px solid var(--accent-cyan);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-indigo));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Specific Layouts */
+        .centered-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            flex-grow: 1;
+            align-items: center;
+        }
+
+        .tile {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            height: 100%;
+        }
+
+        .tile h3 { color: var(--accent-cyan); font-size: 32px; margin-bottom: 20px; }
+
+        .image-box {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-radius: 24px;
+            height: 420px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid var(--glass-border);
+        }
+
+        /* Chart Fixes */
+        .chart-row { display: flex; align-items: center; gap: 20px; margin-bottom: 25px; }
+        .chart-label { flex: 0 0 240px; font-weight: 600; font-size: 24px; color: var(--text-bright); }
+        .chart-track { background: rgba(30, 41, 59, 0.8); height: 52px; flex-grow: 1; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+        .chart-fill { 
+            height: 100%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: 800; 
+            color: white; 
+            font-size: 20px;
+            white-space: nowrap; /* Prevents text stacking */
+            padding: 0 15px;
+            min-width: fit-content; /* Ensures bar is at least as wide as the text */
+        }
+
+        /* Timeline */
+        .timeline { display: flex; justify-content: space-between; position: relative; margin-top: 100px; width: 100%; }
+        .timeline::before { content:''; position: absolute; top: 50%; width: 100%; height: 4px; background: rgba(255,255,255,0.05); }
+        .timeline-item { width: 22%; position: relative; text-align: center; }
+        .timeline-item::after { content:''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 24px; height: 24px; background: var(--bg-deck); border: 4px solid var(--accent-cyan); border-radius: 50%; box-shadow: 0 0 15px var(--accent-cyan); }
+        .timeline-content { position: absolute; width: 100%; }
+        .timeline-item:nth-child(odd) .timeline-content { bottom: 50%; margin-bottom: 40px; }
+        .timeline-item:nth-child(even) .timeline-content { top: 50%; margin-top: 40px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="presentation-deck">
+        
+        <div class="nav-controls">
+            <div class="slide-counter" id="slideCounter">1 / 12</div>
+            
+            <!-- Forward Arrow (Next) - Points Left physically -->
+            <button class="nav-btn" onclick="nextSlide()" title="הבא">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+
+            <!-- Backward Arrow (Prev) - Points Right physically -->
+            <button class="nav-btn" onclick="prevSlide()" title="הקודם">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Slide 1 -->
+        <div class="slide-container active">
+            <div class="centered-content">
+                <h1 style="font-size: 85px;">פיתוח כלים דיגיטליים<br><span class="text-gradient">עם AI ו-Google Script</span></h1>
+                <p class="subtitle">מבוא מעשי לבניית פתרונות שחוסכים זמן</p>
+            </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide-container">
+            <div class="centered-content">
+                <h2 style="font-size: 75px;">המהפכה כבר <span class="text-gradient">כאן</span></h2>
+                <div style="height: 6px; width: 100px; background: var(--accent-cyan); margin: 30px 0; border-radius: 3px;"></div>
+                <p style="font-size: 30px;">מעבר מ"משתמשים" בטכנולוגיה ל"יוצרים" של פתרונות</p>
+            </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="slide-container">
+            <h2 class="slide-title">הצורך <span class="text-gradient">מול המציאות</span></h2>
+            <div class="two-column">
+                <div class="tile">
+                    <h3>המצב הקיים</h3>
+                    <p>משימות ידניות חוזרות, העתקת נתונים בין מערכות, ניסוח הודעות קבוע ובזבוז שעות על אדמיניסטרציה שוחקת.</p>
+                </div>
+                <div class="tile" style="border-color: var(--accent-indigo);">
+                    <h3>הזדמנות ה-AI</h3>
+                    <p>היכולת להסביר ל-AI בשפה טבעית מה אנחנו רוצים, ולקבל קוד עובד שמתחבר לכלים שכולנו כבר משתמשים בהם.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="slide-container">
+            <div class="centered-content">
+                <div style="width: 80%; text-align: center;">
+                    <h2 style="font-size: 44px; line-height: 1.4; color: var(--text-bright);">"הדרך הטובה ביותר לחזות את העתיד היא להמציא אותו בעצמך בעזרת <span class="text-gradient">אוטומציה חכמה</span>."</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5 -->
+        <div class="slide-container">
+            <h2 class="slide-title">ה-AI כשותף פיתוח</h2>
+            <div class="two-column">
+                <div style="font-size: 24px; line-height: 1.8;">
+                    <div style="margin-bottom: 30px;"><strong>• הבנה של שפה טבעית:</strong> פקודה פשוטה הופכת לאלגוריתם מורכב.</div>
+                    <div style="margin-bottom: 30px;"><strong>• פתרון שגיאות:</strong> ה-AI מנתח באגים ומציע תיקון מיידי.</div>
+                    <div><strong>• הנגשת הידע:</strong> לא חייבים להיות מתכנתים כדי לבנות מוצר אמיתי.</div>
+                </div>
+                <div class="image-box">
+                    <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="1.5" opacity="0.8">
+                        <rect x="2" y="3" width="20" height="14" rx="2" stroke-linejoin="round"></rect>
+                        <path d="M8 21h8" stroke-linecap="round"></path>
+                        <path d="M12 17v4" stroke-linecap="round"></path>
+                        <path d="M7 8l3 3-3 3" stroke-linecap="round"></path>
+                        <path d="M12 14h5" stroke-linecap="round"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6 -->
+        <div class="slide-container">
+            <h2 class="slide-title">מה נבנה <span class="text-gradient">היום?</span></h2>
+            <div style="display: flex; gap: 30px; height: 100%;">
+                <div class="tile">
+                    <div style="font-size: 40px; margin-bottom: 20px;">📱</div>
+                    <h3>מחולל קישורים</h3>
+                    <p>כלי שחוסך את הצורך בשמירת אנשי קשר ושולח הודעות מובנות בלחצן אחד.</p>
+                </div>
+                <div class="tile">
+                    <div style="font-size: 40px; margin-bottom: 20px;">💻</div>
+                    <h3>ממשק משתמש</h3>
+                    <p>נבנה טופס נקי ופונקציונלי שכל אחד יכול להפעיל בקלות מהדפדפן.</p>
+                </div>
+                <div class="tile">
+                    <div style="font-size: 40px; margin-bottom: 20px;">⚡</div>
+                    <h3>לוגיקת תזמון</h3>
+                    <p>נראה איך ה-JavaScript מחבר בין הנתונים לתוצאה סופית שעובדת.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7 -->
+        <div class="slide-container" style="padding: 0; flex-direction: row;">
+            <div style="flex: 1; padding: 80px 100px; display: flex; flex-direction: column; justify-content: center;">
+                <h2 class="slide-title">הכלי המעשי</h2>
+                <h3>פיתוח כלי WhatsApp</h3>
+                <p>שליחת הודעות ללקוחות חדשים היא צוואר בקבוק משמעותי. בעזרת הכלי שנבנה, נראה איך הקלדה פשוטה הופכת לשיחה מיידית.</p>
+            </div>
+            <div style="flex: 1; background: linear-gradient(135deg, #16a34a, #14532d); display: flex; justify-content: center; align-items: center;">
+                <svg width="180" height="180" viewBox="0 0 24 24" fill="white">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Slide 8 -->
+        <div class="slide-container">
+            <h2 class="slide-title">ארגז הכלים שלנו</h2>
+            <div style="font-size: 26px; line-height: 2.2;">
+                <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+                    <span style="background: rgba(34, 211, 238, 0.1); padding: 10px; border-radius: 12px; color: var(--accent-cyan); font-weight: 800;">01</span>
+                    <strong>מודל שפה:</strong> ChatGPT / Claude כעוזר פיתוח צמוד.
+                </div>
+                <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+                    <span style="background: rgba(34, 211, 238, 0.1); padding: 10px; border-radius: 12px; color: var(--accent-cyan); font-weight: 800;">02</span>
+                    <strong>עורך קוד:</strong> סביבה קלה להרצה (Notepad / VS Code).
+                </div>
+                <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+                    <span style="background: rgba(34, 211, 238, 0.1); padding: 10px; border-radius: 12px; color: var(--accent-cyan); font-weight: 800;">03</span>
+                    <strong>Google Scripts:</strong> המוח שמחבר את גוגל לעולם.
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9 -->
+        <div class="slide-container">
+            <h2 class="slide-title">חיסכון בזמן <span style="font-weight: 400; color: #94a3b8;">(הערכה)</span></h2>
+            <div style="margin-top: 40px;">
+                <div class="chart-row">
+                    <div class="chart-label">ביצוע ידני</div>
+                    <div class="chart-track">
+                        <div class="chart-fill" style="width: 90%; background: linear-gradient(90deg, #9f1239, #e11d48);">15 דקות</div>
+                    </div>
+                </div>
+                <div class="chart-row">
+                    <div class="chart-label">כלי אוטומטי</div>
+                    <div class="chart-track">
+                        <div class="chart-fill" style="width: 25%; background: linear-gradient(90deg, #047857, #10b981);">2 דקות</div>
+                    </div>
+                </div>
+                <p style="margin-top: 50px; text-align: center; font-style: italic;">הפער המצטבר מייצר עשרות שעות פנויות בחודש לצמיחה עסקית.</p>
+            </div>
+        </div>
+
+        <!-- Slide 10 -->
+        <div class="slide-container">
+            <h2 class="slide-title">תהליך העבודה</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>1. אפיון</h3>
+                        <p>הגדרת הצורך והשדות</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>2. פרומפטינג</h3>
+                        <p>הפקת קוד מה-AI</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>3. בדיקה</h3>
+                        <p>הרצה בדפדפן ותיקון</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>4. הטמעה</h3>
+                        <p>שימוש יומיומי בעסק</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11 -->
+        <div class="slide-container" style="background: radial-gradient(circle at center, rgba(99, 102, 241, 0.2), #0f172a);">
+            <div class="centered-content">
+                <h2 style="font-size: 75px;">יוצאים <span class="text-gradient">לדרך</span></h2>
+                <p style="font-size: 32px; color: #e2e8f0;">בואו נבנה את הכלי הראשון שלכם</p>
+            </div>
+        </div>
+
+        <!-- Slide 12 -->
+        <div class="slide-container">
+            <div class="centered-content">
+                <h2 class="text-gradient" style="font-size: 85px;">שאלות?</h2>
+                <p style="margin-top: 20px;">תודה על ההקשבה, עכשיו הגיע הזמן לתרגל.</p>
+                <div style="margin-top: 60px; font-weight: 700; color: var(--accent-indigo); letter-spacing: 1px;">
+                    סדנאות פיתוח כלים דיגיטליים עם AI
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide-container');
+        const counter = document.getElementById('slideCounter');
+        const deck = document.querySelector('.presentation-deck');
+
+        function showSlide(n) {
+            slides.forEach(s => s.classList.remove('active'));
+            slides[n].classList.add('active');
+            counter.innerText = (n + 1) + ' / ' + slides.length;
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        // Keyboard support - RTL Optimized
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') nextSlide(); // Left arrow = Forward in RTL
+            if (e.key === 'ArrowRight') prevSlide(); // Right arrow = Back in RTL
+        });
+
+        // Auto-scaling logic
+        function fitToScreen() {
+            const scaleX = window.innerWidth / 1280;
+            const scaleY = window.innerHeight / 720;
+            const scale = Math.min(scaleX, scaleY) * 0.96;
+            deck.style.transform = `scale(${scale})`;
+        }
+
+        window.addEventListener('resize', fitToScreen);
+        
+        // Final initialization
+        window.onload = () => {
+            showSlide(0);
+            fitToScreen();
+            // Force a second fit after fonts load
+            setTimeout(fitToScreen, 100);
+        };
+    </script>
+</body>
+</html>
