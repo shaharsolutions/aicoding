@@ -16,20 +16,35 @@
     <!-- Tailwind Configuration -->
     <script>
         tailwind.config = {
-            darkMode: 'media', // Uses system preference for dark mode
+            darkMode: 'class', // Forcing dark/futuristic mode for the best effect
             theme: {
                 extend: {
                     fontFamily: {
                         sans: ['Assistant', 'sans-serif'],
                     },
                     colors: {
-                        brand: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            900: '#0c4a6e',
+                        cyber: {
+                            400: '#22d3ee', // Cyan 400
+                            500: '#06b6d4', // Cyan 500
+                            600: '#0891b2', // Cyan 600
+                            900: '#164e63', // Cyan 900
+                        },
+                        space: {
+                            800: '#1e293b',
+                            900: '#0f172a',
+                            950: '#020617',
+                        }
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
                         }
                     }
                 }
@@ -40,148 +55,246 @@
     <style>
         /* Smooth scrolling and base styling */
         html { scroll-behavior: smooth; }
-        body { font-family: 'Assistant', sans-serif; }
+        body { font-family: 'Assistant', sans-serif; background-color: #020617; color: #f8fafc; }
         
-        /* Custom scrollbar for a sleeker look */
+        /* Custom scrollbar */
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+        /* Futuristic Grid Background */
+        .bg-grid-pattern {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+        }
+
+        /* Glassmorphism Utilities */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .glass-input {
+            background: rgba(2, 6, 23, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .glass-input:focus {
+            border-color: #22d3ee;
+            box-shadow: 0 0 15px rgba(34, 211, 238, 0.2);
+            outline: none;
+        }
+
+        /* Glowing Text */
+        .text-glow {
+            text-shadow: 0 0 20px rgba(34, 211, 238, 0.5);
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300">
+<body class="min-h-screen flex flex-col relative overflow-x-hidden selection:bg-cyber-500 selection:text-white">
+
+    <!-- Ambient Animated Background Elements -->
+    <div class="fixed inset-0 z-0 pointer-events-none">
+        <div class="absolute inset-0 bg-grid-pattern"></div>
+        <!-- Glowing Orbs -->
+        <div class="absolute top-0 right-1/4 w-96 h-96 bg-blue-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-70 animate-blob"></div>
+        <div class="absolute top-40 left-1/4 w-96 h-96 bg-cyber-500/20 rounded-full mix-blend-screen filter blur-[100px] opacity-70 animate-blob" style="animation-delay: 2s;"></div>
+        <div class="absolute -bottom-32 left-1/2 w-96 h-96 bg-indigo-500/20 rounded-full mix-blend-screen filter blur-[100px] opacity-70 animate-blob" style="animation-delay: 4s;"></div>
+    </div>
 
     <!-- Header -->
-    <header class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md sticky top-0 z-40 border-b border-slate-200 dark:border-slate-700">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
-            <div class="text-xl font-bold text-brand-600 dark:text-brand-500">
-                סדנאות AI מעשיות
+    <header class="glass-panel sticky top-0 z-40 border-b-0 border-white/5">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center relative z-10">
+            <div class="text-xl font-bold flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-cyber-400 animate-pulse"></div>
+                <span class="bg-clip-text text-transparent bg-gradient-to-l from-white to-slate-400 tracking-wide">
+                    סדנאות AI מעשיות
+                </span>
             </div>
-            <a href="#register" class="text-sm font-semibold text-slate-600 hover:text-brand-600 dark:text-slate-300 dark:hover:text-brand-400 transition-colors">
-                הרשמה
+            <a href="#register" class="text-sm font-semibold text-slate-300 hover:text-cyber-400 transition-colors flex items-center gap-2">
+                <span>הרשמה</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
             </a>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="flex-grow">
+    <main class="flex-grow relative z-10">
         
         <!-- Hero Section -->
-        <section class="max-w-4xl mx-auto px-4 sm:px-6 py-12 md:py-20 text-center">
-            <span class="inline-block py-1 px-3 rounded-full bg-brand-100 text-brand-700 dark:bg-brand-900/30 dark:text-brand-400 text-sm font-semibold mb-6">
+        <section class="max-w-4xl mx-auto px-4 sm:px-6 py-16 md:py-24 text-center">
+            <div class="inline-flex items-center gap-2 py-1 px-4 rounded-full border border-cyber-500/30 bg-cyber-500/10 text-cyber-400 text-sm font-semibold mb-8 backdrop-blur-sm">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyber-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-cyber-500"></span>
+                </span>
                 סדנה מעשית אונליין
-            </span>
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
-                מבוא לפיתוח <span class="text-transparent bg-clip-text bg-gradient-to-l from-brand-500 to-blue-700 dark:from-brand-400 dark:to-blue-500">כלים דיגיטליים</span> עם AI
+            </div>
+            
+            <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
+                מבוא לפיתוח <br/>
+                <span class="text-transparent bg-clip-text bg-gradient-to-l from-cyber-400 via-blue-500 to-indigo-500 text-glow">כלים דיגיטליים</span> עם AI
             </h1>
-            <p class="text-lg md:text-xl text-slate-600 dark:text-slate-300 mb-8 max-w-2xl mx-auto leading-relaxed">
+            
+            <p class="text-lg md:text-xl text-slate-300 mb-10 max-w-2xl mx-auto leading-relaxed">
                 בסדנה נלמד איך להפוך רעיונות לכלים שעובדים. בלי תיאוריות באוויר, נתרכז בפרקטיקה ובבניית פתרונות קלים לתחזוקה שמייעלים תהליכים יומיומיים.
             </p>
             
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 text-slate-700 dark:text-slate-300 font-medium bg-white dark:bg-slate-800 py-4 px-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 inline-flex mx-auto">
-                <div class="flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+            <!-- Logistics Bar -->
+            <div class="glass-panel py-4 px-8 rounded-2xl inline-flex flex-col sm:flex-row items-center justify-center gap-6 text-slate-200 font-medium mx-auto border-white/10 shadow-[0_0_30px_rgba(6,182,212,0.1)]">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-space-800 rounded-lg text-cyber-400"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg></div>
                     <span>יום שלישי</span>
                 </div>
-                <div class="hidden sm:block w-px h-5 bg-slate-300 dark:bg-slate-600"></div>
-                <div class="flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <div class="hidden sm:block w-px h-8 bg-slate-700"></div>
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-space-800 rounded-lg text-cyber-400"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>
                     <span>שעה 19:00</span>
                 </div>
-                <div class="hidden sm:block w-px h-5 bg-slate-300 dark:bg-slate-600"></div>
-                <div class="flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>
+                <div class="hidden sm:block w-px h-8 bg-slate-700"></div>
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-space-800 rounded-lg text-cyber-400"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg></div>
                     <span>60 דקות</span>
                 </div>
             </div>
         </section>
 
         <!-- What We'll Build Section -->
-        <section class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
-            <div class="bg-brand-50 dark:bg-slate-800/50 rounded-3xl p-8 border border-brand-100 dark:border-slate-700">
-                <h2 class="text-2xl font-bold mb-4 flex items-center gap-3">
-                    <span class="bg-brand-500 text-white p-2 rounded-lg">
+        <section class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+            <div class="glass-panel rounded-3xl p-8 relative overflow-hidden group hover:border-cyber-500/50 transition-colors duration-500">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-cyber-500/10 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-cyber-500/20 transition-all duration-500"></div>
+                
+                <h2 class="text-2xl font-bold mb-4 flex items-center gap-3 text-white">
+                    <span class="bg-gradient-to-br from-cyber-500 to-blue-600 text-white p-2.5 rounded-xl shadow-[0_0_15px_rgba(6,182,212,0.4)]">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
                     </span>
                     מה נבנה בפועל?
                 </h2>
-                <p class="text-lg text-slate-700 dark:text-slate-300 leading-relaxed">
-                    <strong>מחולל קישור לווטסאפ עם הודעה מוכנה.</strong><br>
+                <p class="text-lg text-slate-300 leading-relaxed relative z-10">
+                    <strong class="text-white">מחולל קישור לווטסאפ עם הודעה מוכנה.</strong><br>
                     כלי קטן, שימושי וממוקד שחוסך זמן בשימוש יומיומי. נראה איך לפרק את המשימה לשלבים, להשתמש ב-AI כשותף לכתיבת הקוד, ולהעמיד פתרון עובד באוויר בצורה המסודרת והיעילה ביותר.
                 </p>
             </div>
         </section>
 
+        <!-- About Me Section -->
+        <section class="max-w-3xl mx-auto px-4 sm:px-6 pb-12">
+            <div class="glass-panel rounded-3xl p-8 relative overflow-hidden group hover:border-indigo-500/50 transition-colors duration-500">
+                <!-- Decorative subtle accent line -->
+                <div class="absolute top-0 right-0 w-1.5 h-full bg-gradient-to-b from-cyber-500 to-indigo-600 rounded-r-3xl opacity-80"></div>
+                <div class="absolute bottom-0 left-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl -ml-10 -mb-10 group-hover:bg-indigo-500/20 transition-all duration-500"></div>
+                
+                <h2 class="text-2xl font-bold mb-5 text-white mr-4">מי אני</h2>
+                
+                <div class="space-y-4 text-lg text-slate-300 leading-relaxed mr-4 relative z-10">
+                    <p>
+                        שמי שחר כהן. בעל תואר ראשון בטכנולוגיות למידה מהמכון הטכנולוגי בחולון (HIT). צברתי ניסיון מקצועי בתחום פיתוח הלמידה הדיגיטלית בארגון מוביל בשוק הלמידה הארגונית בישראל. בנוסף, יש לי ניסיון בעבודה צמודה עם לקוחות ואפיון פתרונות דיגיטליים לעסקים במסגרת פעילות מכירות באותו ארגון.
+                    </p>
+                    <p>
+                        כיום אני מפתח מערכות וכלים מבוססי-ווב לבעלי עסקים ומשלב טכנולוגיות כמו AI, Google Apps Script ואוטומציות, מתוך מטרה לבנות דברים שעובדים באמת, עוזרים לאנשים וחוסכים זמן.
+                    </p>
+                    <p>
+                        אני מלמד אנשים איך לבנות פתרונות דיגיטליים אמיתיים בצורה פשוטה ופרקטית, גם בלי להיות מתכנתים.
+                    </p>
+                    
+                    <div class="pt-5 mt-5 border-t border-white/10">
+                        <p class="text-base font-medium text-slate-400">
+                            למידע נוסף על הפרויקטים והכלים שאני בונה:<br>
+                            <a href="https://shaharsolutions.github.io/shahardigitalsolutions/" target="_blank" rel="noopener noreferrer" class="text-cyber-400 hover:text-cyber-300 font-semibold transition-all duration-300 hover:text-shadow-glow inline-block mt-1 break-all" dir="ltr">
+                                https://shaharsolutions.github.io/shahardigitalsolutions/
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Registration Form Section -->
-        <section id="register" class="max-w-2xl mx-auto px-4 sm:px-6 py-12 mb-12">
-            <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-700 p-8 sm:p-10 relative overflow-hidden">
+        <section id="register" class="max-w-2xl mx-auto px-4 sm:px-6 pb-20">
+            <div class="glass-panel rounded-3xl p-8 sm:p-10 relative overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-t border-white/20">
+                
+                <!-- Geometric decorative elements inside form -->
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyber-500 to-transparent opacity-50"></div>
                 
                 <!-- Success Message (Hidden by default) -->
-                <div id="successMessage" class="hidden absolute inset-0 bg-white dark:bg-slate-800 z-10 flex flex-col items-center justify-center text-center p-8">
-                    <div class="w-16 h-16 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                <div id="successMessage" class="hidden absolute inset-0 bg-space-900/95 backdrop-blur-xl z-20 flex flex-col items-center justify-center text-center p-8">
+                    <div class="w-20 h-20 rounded-full bg-cyber-500/20 border border-cyber-500/50 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(34,211,238,0.3)]">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-cyber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
                     </div>
-                    <h3 class="text-2xl font-bold mb-2">הרשמתך נקלטה בהצלחה!</h3>
-                    <p class="text-slate-600 dark:text-slate-400">
-                        פרטי הסדנה וקישור ההתחברות יישלחו אליך לקראת המועד. נתראה!
+                    <h3 class="text-3xl font-bold mb-3 text-white">הרשמתך נקלטה!</h3>
+                    <p class="text-slate-300 text-lg">
+                        הנתונים נשמרו במערכת. פרטי הסדנה וקישור ההתחברות יישלחו אליך לקראת המועד.
                     </p>
                 </div>
 
-                <div class="text-center mb-8">
-                    <h2 class="text-3xl font-bold mb-2">הרשמה לסדנה</h2>
-                    <p class="text-slate-500 dark:text-slate-400">השאירו פרטים ונשלח לכם תזכורת וקישור השתתפות.</p>
+                <div class="text-center mb-10 relative z-10">
+                    <h2 class="text-3xl font-bold mb-3 text-white">אתחול מערכת: הרשמה לסדנה</h2>
+                    <p class="text-slate-400">הזינו פרטים ליצירת פרופיל משתתף וקבלת קישור התחברות.</p>
                 </div>
 
-                <form id="workshopForm" class="space-y-5">
+                <form id="workshopForm" class="space-y-6 relative z-10">
                     
                     <div>
-                        <label for="fullName" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">שם מלא *</label>
+                        <label for="fullName" class="block text-sm font-semibold text-slate-300 mb-2">שם מלא *</label>
                         <input type="text" id="fullName" name="שם מלא" required
-                            class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all dark:text-white"
+                            class="glass-input w-full px-5 py-4 rounded-xl transition-all duration-300"
                             placeholder="ישראל ישראלי">
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div>
-                            <label for="phone" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">טלפון נייד</label>
+                            <label for="phone" class="block text-sm font-semibold text-slate-300 mb-2">טלפון נייד</label>
                             <input type="tel" id="phone" name="טלפון" dir="ltr"
-                                class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all dark:text-white text-right sm:text-left"
+                                class="glass-input w-full px-5 py-4 rounded-xl transition-all duration-300 text-right sm:text-left font-mono"
                                 placeholder="050-0000000">
                         </div>
                         <div>
-                            <label for="email" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">אימייל</label>
+                            <label for="email" class="block text-sm font-semibold text-slate-300 mb-2">אימייל</label>
                             <input type="email" id="email" name="אימייל" dir="ltr"
-                                class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all dark:text-white text-right sm:text-left"
+                                class="glass-input w-full px-5 py-4 rounded-xl transition-all duration-300 text-right sm:text-left font-mono"
                                 placeholder="name@example.com">
                         </div>
                     </div>
 
                     <!-- Validation Error Message -->
-                    <div id="contactError" class="hidden text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-3 rounded-lg border border-red-200 dark:border-red-800/30">
-                        * אנא הזן לפחות אמצעי קשר אחד (טלפון או אימייל) כדי שנוכל לשלוח לך את הקישור לסדנה.
+                    <div id="contactError" class="hidden text-sm text-red-400 bg-red-900/20 p-4 rounded-xl border border-red-500/30 flex items-start gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                        <span>שגיאת מערכת: חובה להזין לפחות אמצעי קשר אחד (טלפון או אימייל) כדי שנוכל לשלוח את קישור הגישה.</span>
                     </div>
 
                     <div>
-                        <label for="message" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">הודעה (אופציונלי)</label>
+                        <label for="message" class="block text-sm font-semibold text-slate-300 mb-2">הודעה (אופציונלי)</label>
                         <textarea id="message" name="הודעה" rows="3"
-                            class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all resize-none dark:text-white"
-                            placeholder="שאלה מראש, ציפייה מהסדנה, או כל דבר אחר..."></textarea>
+                            class="glass-input w-full px-5 py-4 rounded-xl transition-all duration-300 resize-none"
+                            placeholder="שאלה מראש, ציפייה מהסדנה..."></textarea>
                     </div>
 
-                    <div class="flex items-start pt-2">
+                    <div class="flex items-start pt-2 bg-space-800/30 p-4 rounded-xl border border-white/5">
                         <div class="flex items-center h-5">
                             <input id="privacyConsent" type="checkbox" required
-                                class="w-4 h-4 text-brand-600 bg-slate-100 border-slate-300 rounded focus:ring-brand-500 dark:focus:ring-brand-600 dark:ring-offset-slate-800 focus:ring-2 dark:bg-slate-700 dark:border-slate-600">
+                                class="w-5 h-5 text-cyber-500 bg-space-900 border-slate-600 rounded focus:ring-cyber-500 focus:ring-offset-space-900 focus:ring-2 cursor-pointer transition-colors">
                         </div>
-                        <label for="privacyConsent" class="mr-2 text-sm text-slate-600 dark:text-slate-400 leading-tight">
-                            בלחיצה על כפתור השליחה, אני מסכים ל<button type="button" onclick="openModal()" class="text-brand-600 dark:text-brand-400 underline hover:text-brand-800 transition-colors">מדיניות הפרטיות</button> של האתר. הנתונים ישמשו אך ורק לשליחת תזכורות ועדכונים הקשורים לסדנה.
+                        <label for="privacyConsent" class="mr-3 text-sm text-slate-400 leading-relaxed cursor-pointer">
+                            אישור סנכרון נתונים: אני מסכים ל<button type="button" onclick="openModal()" class="text-cyber-400 underline hover:text-cyber-300 transition-colors">מדיניות הפרטיות</button>. הנתונים ישמשו אך ורק לשליחת תזכורות ועדכונים הקשורים לסדנה (ללא ספאם).
                         </label>
                     </div>
 
                     <button type="submit" id="submitBtn"
-                        class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-4 px-8 rounded-xl transition-all duration-200 transform hover:-translate-y-1 shadow-lg hover:shadow-brand-500/30 flex justify-center items-center gap-2 mt-4 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none">
-                        <span id="btnText">הרשמה לסדנה</span>
-                        <svg id="btnSpinner" class="hidden animate-spin -mr-1 ml-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        class="w-full relative group overflow-hidden bg-gradient-to-r from-blue-600 to-cyber-600 hover:from-blue-500 hover:to-cyber-500 text-white font-bold py-5 px-8 rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] flex justify-center items-center gap-3 mt-6 disabled:opacity-70 disabled:cursor-not-allowed border border-cyber-400/30">
+                        <!-- Button Glare effect -->
+                        <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
+                        
+                        <span id="btnText" class="tracking-wide text-lg relative z-10">הפעלת תהליך הרשמה</span>
+                        <svg id="btnSpinner" class="hidden animate-spin h-6 w-6 text-white relative z-10" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
@@ -193,10 +306,10 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-slate-100 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-8">
+    <footer class="border-t border-white/10 bg-space-950/80 backdrop-blur-md py-8 relative z-10">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 flex flex-col items-center justify-center text-center">
-            <button onclick="openModal()" class="text-sm text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400 transition-colors">
-                מדיניות פרטיות
+            <button onclick="openModal()" class="text-sm text-slate-500 hover:text-cyber-400 transition-colors">
+                מדיניות פרטיות ואבטחת נתונים
             </button>
         </div>
     </footer>
@@ -204,38 +317,38 @@
     <!-- Privacy Policy Modal -->
     <div id="privacyModal" class="fixed inset-0 z-50 hidden opacity-0 transition-opacity duration-300">
         <!-- Backdrop -->
-        <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div class="absolute inset-0 bg-space-950/80 backdrop-blur-md" onclick="closeModal()"></div>
         
         <!-- Modal Content -->
-        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-11/12 max-w-lg bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto border border-slate-200 dark:border-slate-700">
-            <div class="flex justify-between items-center mb-5">
-                <h3 class="text-2xl font-bold">מדיניות פרטיות</h3>
-                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1">
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-11/12 max-w-lg glass-panel rounded-2xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.8)]">
+            <div class="flex justify-between items-center mb-6 pb-4 border-b border-white/10">
+                <h3 class="text-2xl font-bold text-white">מדיניות פרטיות</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white p-1 transition-colors rounded-lg hover:bg-white/10">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
             </div>
-            <div class="prose prose-sm dark:prose-invert text-slate-600 dark:text-slate-300 space-y-4">
+            <div class="prose prose-sm prose-invert text-slate-300 space-y-4">
                 <p>אנו מייחסים חשיבות רבה לפרטיותך. מסמך זה מפרט כיצד אנו אוספים ומשתמשים במידע שלך במסגרת ההרשמה לסדנה.</p>
                 
-                <h4 class="font-bold text-slate-800 dark:text-slate-100">איסוף ושימוש במידע</h4>
-                <p>המידע שאתה מספק בטופס (שם, טלפון, אימייל והודעה) נאסף אך ורק לצורך רישום לסדנה "מבוא לפיתוח כלים דיגיטליים עם AI". אנו נשתמש במידע זה כדי:</p>
-                <ul class="list-disc list-inside space-y-1">
+                <h4 class="font-bold text-cyber-400 mt-6">איסוף ושימוש במידע</h4>
+                <p>המידע שאתה מספק בטופס נאסף אך ורק לצורך רישום לסדנה "מבוא לפיתוח כלים דיגיטליים עם AI". אנו נשתמש במידע זה כדי:</p>
+                <ul class="list-disc list-inside space-y-1 text-slate-400">
                     <li>לשלוח לך את קישור ההתחברות לסדנה.</li>
                     <li>לשלוח תזכורות לקראת מועד הסדנה.</li>
                     <li>ליצור קשר במקרה של שינויים בלוח הזמנים.</li>
                 </ul>
 
-                <h4 class="font-bold text-slate-800 dark:text-slate-100">תיקון 13 לחוק הגנת הפרטיות</h4>
+                <h4 class="font-bold text-cyber-400 mt-6">תיקון 13 לחוק הגנת הפרטיות</h4>
                 <p>בהתאם לתיקון 13 לחוק הגנת הפרטיות, התשמ"א-1981, אנו מתחייבים כי:</p>
-                <ul class="list-disc list-inside space-y-1">
+                <ul class="list-disc list-inside space-y-1 text-slate-400">
                     <li>הנתונים יישמרו בצורה מאובטחת.</li>
                     <li>המידע לא יועבר לשום צד שלישי ללא הסכמתך המפורשת.</li>
                     <li>באפשרותך לדרוש בכל עת את מחיקת פרטיך ממאגר המידע על ידי פנייה אלינו.</li>
                 </ul>
             </div>
             <div class="mt-8 text-left">
-                <button onclick="closeModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-white font-semibold py-2 px-6 rounded-lg transition-colors">
-                    סגירה
+                <button onclick="closeModal()" class="bg-white/10 hover:bg-white/20 text-white font-semibold py-2 px-6 rounded-lg transition-colors border border-white/10">
+                    הבנתי, סגור
                 </button>
             </div>
         </div>
@@ -248,18 +361,17 @@
         
         function openModal() {
             modal.classList.remove('hidden');
-            // Small delay to allow display:block to apply before animating opacity
             setTimeout(() => {
                 modal.classList.remove('opacity-0');
             }, 10);
-            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            document.body.style.overflow = 'hidden'; 
         }
 
         function closeModal() {
             modal.classList.add('opacity-0');
             setTimeout(() => {
                 modal.classList.add('hidden');
-            }, 300); // match transition duration
+            }, 300); 
             document.body.style.overflow = '';
         }
 
@@ -274,8 +386,7 @@
         const successMessage = document.getElementById('successMessage');
 
         // URL Placeholder for Google Apps Script Web App
-        // Replace this empty string with your deployed script URL
-        const scriptURL = "https://script.google.com/macros/s/AKfycbykOP7fgpgMMOJcOPc3gYBBslTEkm-dyZLnFqrvzSrRZ8OUzF71DpIoFnMgjZcupx9X/exec"; 
+        const scriptURL = ""; 
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -286,32 +397,27 @@
 
             if (!phoneVal && !emailVal) {
                 errorMsg.classList.remove('hidden');
-                // Optional: highlight inputs
-                phoneInput.classList.add('border-red-500');
-                emailInput.classList.add('border-red-500');
+                phoneInput.classList.add('border-red-500/50', 'bg-red-900/10');
+                emailInput.classList.add('border-red-500/50', 'bg-red-900/10');
                 return;
             }
 
             // Reset validation visual state
             errorMsg.classList.add('hidden');
-            phoneInput.classList.remove('border-red-500');
-            emailInput.classList.remove('border-red-500');
+            phoneInput.classList.remove('border-red-500/50', 'bg-red-900/10');
+            emailInput.classList.remove('border-red-500/50', 'bg-red-900/10');
 
             // UI Loading state
             submitBtn.disabled = true;
-            btnText.textContent = "שולח נתונים...";
+            btnText.textContent = "מעבד נתונים...";
             btnSpinner.classList.remove('hidden');
 
             try {
-                // Collect form data mapping to exact Hebrew keys
                 const formData = new FormData(form);
-                
-                // Add registration timestamp
                 const now = new Date();
                 const timestamp = now.toLocaleDateString('he-IL') + ' ' + now.toLocaleTimeString('he-IL');
                 formData.append('תאריך הרשמה', timestamp);
 
-                // Send data if URL is provided
                 if (scriptURL) {
                     const response = await fetch(scriptURL, {
                         method: 'POST',
@@ -322,42 +428,41 @@
                         throw new Error('Network response was not ok');
                     }
                 } else {
-                    // Simulate network request for demonstration if no URL is provided
                     console.warn("No scriptURL provided. Simulating successful submission.");
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    
-                    // Log the data that would be sent (for debugging)
-                    const dataObj = {};
-                    formData.forEach((value, key) => dataObj[key] = value);
-                    console.log("Data to be saved:", dataObj);
+                    await new Promise(resolve => setTimeout(resolve, 1200));
                 }
 
-                // Show success UI (without page reload)
+                // Show success UI 
                 form.classList.add('opacity-0', 'pointer-events-none');
                 setTimeout(() => {
                     successMessage.classList.remove('hidden');
                     successMessage.classList.add('flex');
-                }, 300); // wait for fade out
+                }, 300); 
 
             } catch (error) {
                 console.error('Error submitting form!', error.message);
-                alert('אירעה שגיאה בשליחת הטופס. אנא נסה שוב מאוחר יותר.');
+                alert('שגיאת תקשורת. אנא נסה שוב מאוחר יותר.');
                 
                 // Reset UI on error
                 submitBtn.disabled = false;
-                btnText.textContent = "הרשמה לסדנה";
+                btnText.textContent = "הפעלת תהליך הרשמה";
                 btnSpinner.classList.add('hidden');
             }
         });
 
-        // Clear error styling when user types in phone or email
+        // Clear error styling on input
         [phoneInput, emailInput].forEach(input => {
             input.addEventListener('input', () => {
                 errorMsg.classList.add('hidden');
-                phoneInput.classList.remove('border-red-500');
-                emailInput.classList.remove('border-red-500');
+                phoneInput.classList.remove('border-red-500/50', 'bg-red-900/10');
+                emailInput.classList.remove('border-red-500/50', 'bg-red-900/10');
             });
         });
+
+        // Custom Tailwind Keyframes for button glare
+        tailwind.config.theme.extend.keyframes.shimmer = {
+            '100%': { transform: 'translateX(100%)' }
+        };
     </script>
 </body>
 </html>
