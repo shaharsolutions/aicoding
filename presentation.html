@@ -54,7 +54,7 @@
             border: 1px solid var(--glass-border);
         }
 
-        /* Nav Controls - Modern Glassmorphism */
+        /* Nav Controls */
         .nav-controls {
             position: absolute;
             bottom: 30px;
@@ -69,7 +69,7 @@
             padding: 10px 20px;
             border-radius: 100px;
             border: 1px solid var(--glass-border);
-            direction: ltr; /* Force physical order: counter, prev, next */
+            direction: ltr;
         }
 
         .slide-counter {
@@ -121,7 +121,6 @@
             transform: translateY(0);
         }
 
-        /* Typography */
         h1, h2, h3 { font-family: 'Rubik', sans-serif; margin: 0; }
         
         .slide-title {
@@ -140,7 +139,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Specific Layouts */
         .centered-content {
             flex-grow: 1;
             display: flex;
@@ -178,7 +176,7 @@
             border: 1px solid var(--glass-border);
         }
 
-        /* Chart Fixes */
+        /* Chart Section */
         .chart-row { display: flex; align-items: center; gap: 20px; margin-bottom: 25px; }
         .chart-label { flex: 0 0 240px; font-weight: 600; font-size: 24px; color: var(--text-bright); }
         .chart-track { background: rgba(30, 41, 59, 0.8); height: 52px; flex-grow: 1; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
@@ -190,9 +188,9 @@
             font-weight: 800; 
             color: white; 
             font-size: 20px;
-            white-space: nowrap; /* Prevents text stacking */
+            white-space: nowrap;
             padding: 0 15px;
-            min-width: fit-content; /* Ensures bar is at least as wide as the text */
+            min-width: fit-content;
         }
 
         /* Timeline */
@@ -213,16 +211,14 @@
         <div class="nav-controls">
             <div class="slide-counter" id="slideCounter">1 / 12</div>
             
-            <!-- Forward Arrow (Next) - Points Left physically -->
             <button class="nav-btn" onclick="nextSlide()" title="הבא">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
             </button>
 
-            <!-- Backward Arrow (Prev) - Points Right physically -->
             <button class="nav-btn" onclick="prevSlide()" title="הקודם">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
             </button>
@@ -263,8 +259,8 @@
         <!-- Slide 4 -->
         <div class="slide-container">
             <div class="centered-content">
-                <div style="width: 80%; text-align: center;">
-                    <h2 style="font-size: 44px; line-height: 1.4; color: var(--text-bright);">"הדרך הטובה ביותר לחזות את העתיד היא להמציא אותו בעצמך בעזרת <span class="text-gradient">אוטומציה חכמה</span>."</h2>
+                <div style="width: 85%; text-align: center;">
+                    <h2 style="font-size: 48px; line-height: 1.4; color: var(--text-bright);">"במקום לחכות לפתרונות של המחר, בנו בעצמכם את הכלים שמייעלים לכם את העבודה <span class="text-gradient">כבר היום</span>."</h2>
                 </div>
             </div>
         </div>
@@ -303,11 +299,6 @@
                     <div style="font-size: 40px; margin-bottom: 20px;">💻</div>
                     <h3>ממשק משתמש</h3>
                     <p>נבנה טופס נקי ופונקציונלי שכל אחד יכול להפעיל בקלות מהדפדפן.</p>
-                </div>
-                <div class="tile">
-                    <div style="font-size: 40px; margin-bottom: 20px;">⚡</div>
-                    <h3>לוגיקת תזמון</h3>
-                    <p>נראה איך ה-JavaScript מחבר בין הנתונים לתוצאה סופית שעובדת.</p>
                 </div>
             </div>
         </div>
@@ -358,7 +349,7 @@
                 <div class="chart-row">
                     <div class="chart-label">כלי אוטומטי</div>
                     <div class="chart-track">
-                        <div class="chart-fill" style="width: 25%; background: linear-gradient(90deg, #047857, #10b981);">2 דקות</div>
+                        <div class="chart-fill" style="width: 15%; background: linear-gradient(90deg, #047857, #10b981);">2 דקות</div>
                     </div>
                 </div>
                 <p style="margin-top: 50px; text-align: center; font-style: italic;">הפער המצטבר מייצר עשרות שעות פנויות בחודש לצמיחה עסקית.</p>
@@ -443,13 +434,11 @@
             }
         }
 
-        // Keyboard support - RTL Optimized
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') nextSlide(); // Left arrow = Forward in RTL
-            if (e.key === 'ArrowRight') prevSlide(); // Right arrow = Back in RTL
+            if (e.key === 'ArrowLeft') nextSlide(); 
+            if (e.key === 'ArrowRight') prevSlide(); 
         });
 
-        // Auto-scaling logic
         function fitToScreen() {
             const scaleX = window.innerWidth / 1280;
             const scaleY = window.innerHeight / 720;
@@ -459,11 +448,9 @@
 
         window.addEventListener('resize', fitToScreen);
         
-        // Final initialization
         window.onload = () => {
             showSlide(0);
             fitToScreen();
-            // Force a second fit after fonts load
             setTimeout(fitToScreen, 100);
         };
     </script>
